@@ -1,9 +1,5 @@
 # Event Client
 
-![License](https://img.shields.io/badge/license-GPL--2.0--or--later-green)
-![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue)
-![Version](https://img.shields.io/badge/version-1.0.0-brightgreen)
-
 A WordPress plugin that provides REST API endpoints for remote event creation and management. This plugin acts as a client-side receiver for an Event Controller, allowing external systems to create, update, and manage events on a WordPress site.
 
 ## Features
