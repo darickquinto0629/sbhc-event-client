@@ -66,6 +66,8 @@ class Event_Client_Public {
 
 			// Create Event
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-create-events.php';	
+			// Import Event ACF fields
+		 	require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-acf-fields.php';
 
 			//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-get-events.php';	
 		 	//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-calendar-template.php';
