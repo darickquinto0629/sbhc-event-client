@@ -155,7 +155,7 @@ function em_ticketprice($replace, $EM_Event, $result){
 		
         if(get_field('ticket_price', $id )):
 			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-presenter"><span class="em-icon-ticket em-icon"></span>';
-			$replace .= '<div>$'.get_field('ticket_price', $id ).'</div></div>';
+			$replace .= '<div>'.get_field('ticket_price', $id ).'</div></div>';
 		else: 
 			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-presenter"><span class="em-icon-ticket em-icon"></span><div>Free</div></div>';      
         endif;		
@@ -172,13 +172,13 @@ function em_location($replace, $EM_Event, $result){
         $replace = "";
         $id = $EM_Event->post_id;
 		
-        if(get_field('location', $id )):
+        if(get_field('event_location_type', $id )):
 
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>'.get_field('location', $id ).'</div></div>';
+			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>'.get_field('event_location_type', $id ).'</div></div>';
 
 		else: 
 
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>Online</div></div>';   
+			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>Virtual</div></div>';   
 	
         endif;
 		

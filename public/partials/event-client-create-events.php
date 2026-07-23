@@ -59,8 +59,8 @@ class Create_Event_Route {
 		$ticket_price = isset( $request['ticket_price'] ) ? sanitize_text_field( $request['ticket_price'] ) : '';
 		$event_location = isset( $request['event_location'] ) ? sanitize_text_field( $request['event_location'] ) : '';
 		$event_type = isset( $request['event_type'] ) ? sanitize_text_field( $request['event_type'] ) : '';
-		$summary = isset( $request['summary'] ) ? sanitize_text_field( $request['summary'] ) : '';
-		$short_summary = isset( $request['short_summary'] ) ? sanitize_text_field( $request['short_summary'] ) : '';
+		$summary = isset( $request['summary'] ) ? wp_kses_post( $request['summary'] ) : '';
+		$short_summary = isset( $request['short_summary'] ) ? wp_kses_post( $request['short_summary'] ) : '';
 		$contact_name = isset( $request['contact_name'] ) ? sanitize_text_field( $request['contact_name'] ) : '';
 		$contact_number = isset( $request['contact_number'] ) ? sanitize_text_field( $request['contact_number'] ) : '';
 		$contact_address = isset( $request['contact_address'] ) ? sanitize_text_field( $request['contact_address'] ) : '';
