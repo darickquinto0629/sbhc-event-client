@@ -64,16 +64,18 @@ class Event_Client_Public {
 	 public function event_client_functionalities() { 
 	        // Search functionality above the header section
 
-			// Create Event
-			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-create-events.php';	
 		 	// Register ACF Fields for Events
 			require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-acf-fields.php';
 		 	// Custom Event Place Holder
 		 	require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-calendar-template.php';
-		 
+		 	// Helper Functions
+		 	require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-helper-functions.php';
+
 		 	//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-get-events.php';
 		 	//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-shortcodes.php';
-		 	//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-helper-functions.php';
+			// Create Event - this custom build endpoint we are retiring this as we are already using the wp events manager endpoint. 
+			//require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/event-client-create-events.php';				
+
 	 }
 
 	/**

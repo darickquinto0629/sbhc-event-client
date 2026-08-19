@@ -171,16 +171,48 @@ function em_location($replace, $EM_Event, $result){
     if( $result == '#_EMLOCATION' ){
         $replace = "";
         $id = $EM_Event->post_id;
+		$location = get_field('location', $id);
+
+		if (
+			!empty($location['location_name']) ||
+			!empty($location['address_1']) ||
+			!empty($location['address_2']) ||
+			!empty($location['city']) ||
+			!empty($location['state']) ||
+			!empty($location['zip_code'])
+		):
+			if( have_rows('location',  $id ) ):
+				while( have_rows('location',  $id) ): the_row(); 
 		
-        if(get_field('event_location_type', $id )):
+					$location_name = get_sub_field('location_name',  $id);
+					$address_1 = get_sub_field('address_1',  $id);
+					$address_2 = get_sub_field('address_2',  $id);
+					$city = get_sub_field('city',  $id);
+					$state = get_sub_field('state',  $id);
+					$zip = get_sub_field('zip',  $id);		
+		
+					$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>';
 
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>'.get_field('event_location_type', $id ).'</div></div>';
+						if($location_name):
+							$replace .= $location_name;
+						endif;
 
+						$address = array_filter([
+							$address_1,
+							$address_2,
+							trim($city . ', ' . $state . ' ' . $zip)
+						]);
+
+						if($address):
+							$replace .= '<br>' . implode('<br>', $address);
+						endif;	
+		
+					$replace .= '</div></div>';		
+				endwhile;
+			endif;
 		else: 
-
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>Virtual</div></div>';   
-	
-        endif;
+			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>Virtual</div></div>';  
+		endif;
 		
     }
     return $replace;

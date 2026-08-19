@@ -9,197 +9,72 @@ if ( ! function_exists( 'enable_cors' ) ) {
 }
 
 /**
- * Event Template Filters Start
+ * Events Manager API + ACF Integration
+ * Hook into em_api_event_save to capture ACF fields from EM API payload
  */
-
-// Summary
-add_filter('em_event_output_placeholder','em_summary',1,3);
-function em_summary($replace, $EM_Event, $result){
-    if( $result == '#_EMSUMMARY' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		
-        if(get_field('summary', $id )):
-            $replace .= '<h3>Summary:</h3>';
-            $replace .= get_field('summary', $id );
-        endif;		
-		
+add_action( 'em_api_event_save', function( $EM_Event, $data, $event_id ) {
+    if ( ! function_exists( 'update_field' ) ) {
+        return;
     }
-    return $replace;
-}
 
-
-// Learning Objectives
-add_filter('em_event_output_placeholder','em_learnobj',1,3);
-function em_learnobj($replace, $EM_Event, $result){
-    if( $result == '#_EMOBJ' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		
-    // Check rows exists.
-    if( have_rows('learning_objectives', $id ) ):
-        $replace .= '<h3>Learning Objectives:</h3>';
-        $replace .= '<ul>';
-        // Loop through rows.
-        while( have_rows('learning_objectives', $id ) ) : the_row();
-    
-            // Load sub field value.
-            //$sub_value = str_replace('&nbsp;', ' ', get_sub_field('objectives', $id));
-            $entities = str_replace('&nbsp;', ' ', htmlentities(get_sub_field('objectives', $id)));
-            //html_entity_decode($entities);            
-            $replace .=  $entities != '' ? '<li>' .html_entity_decode($entities). '</li>' : '';
-        // End loop.
-        endwhile;
-        $replace .= '</ul>';
-    // No value.
-    else :
-        // Do something...
-    endif;
-		
+    $post_id = $EM_Event->post_id ?? 0;
+    if ( ! $post_id ) {
+        return;
     }
-    return $replace;
-}
 
+    $data = is_array( $data ) ? $data : array();
 
-// Contact Information
-add_filter('em_event_output_placeholder','em_contactinfo',1,3);
-function em_contactinfo($replace, $EM_Event, $result){
-    if( $result == '#_EMCONTACTINFO' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
+    // ACF field mappings
+    $acf_field_mappings = array(
+        'presenter'           => 'presenter',
+        'ticket_price'        => 'ticket_price',
+        'event_location_type' => 'event_location_type',
+        'summary'             => 'summary',
+        'short_summary'       => 'short_summary',
+        'contact_name'        => 'name',
+        'contact_number'      => 'number',
+        'contact_address'     => 'address',
+        'registration_link'   => 'registration_link',
+    );
 
-        if(get_field('name', $id ) || get_field('number',  $id  ) || get_field('address', $id )):
-            $replace .= '<h3>For more information contact:</h3>';
-        endif;
+    // Update ACF fields
+    foreach ( $acf_field_mappings as $request_field => $acf_field_name ) {
+        if ( ! isset( $data[ $request_field ] ) || empty( $data[ $request_field ] ) ) {
+            continue;
+        }
+
+        $value = $data[ $request_field ];
+
+        if ( in_array( $acf_field_name, array( 'summary', 'short_summary' ), true ) ) {
+            $value = wp_kses_post( $value );
+        } else {
+            $value = sanitize_text_field( $value );
+        }
+
+        update_field( $acf_field_name, $value, $post_id );
+    }
+
+    // Handle location group field
+    if ( ! empty( $data['location'] ) && is_array( $data['location'] ) ) {
+        $location = array();
+        $location_fields = array( 'location_name', 'country', 'address_1', 'address_2', 'city', 'state', 'zip_code' );
         
-         $replace .=  get_field('name', $id ) ? '<p>Name: ' .get_field('name', $id ). '</p>' : '';
-         $replace .=  get_field('number', $id ) ? '<p>Phone: ' .get_field('number', $id ). '</p>' : '';
-         $replace .=  get_field('address', $id ) ? '<p>Email: ' .get_field('address', $id ). '</p>' : '';		
-		
-		
-    }
-    return $replace;
-}
-
-
-// Event URL
-add_filter('em_event_output_placeholder','em_url',1,3);
-function em_url($replace, $EM_Event, $result){
-    if( $result == '#_EMURL' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		if(get_field('registration_link', $id)):
-            
-			$replace = '<a id="register-btn" target="_blank" href="' .get_field('registration_link', $id ). '">More Info/Register</a>';
-		else: 
-			$replace = '';
-
-        endif;
-    }
-    return $replace;
-}
-
-// Presenter
-add_filter('em_event_output_placeholder','em_presenter',1,3);
-function em_presenter($replace, $EM_Event, $result){
-    if( $result == '#_EMPRESENTER' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		if(get_field('presenter', $id)):
-            
-			$replace .= '<div class="em-item-meta-line em-item-presenter em-event-presenter"><span class="em-icon-presenter em-icon"></span>';
-			$replace .=	'<div>'.get_field('presenter', $id ).'</div>';
-			$replace .= '</div>';
-
-        endif;
-    }
-    return $replace;
-}
-
-add_filter('em_event_output_placeholder','em_lbimage',1,3);
-function em_lbimage($replace, $EM_Event, $result){
-    if( $result == '#_LBIMAGE' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-        $featured_ID = get_post_thumbnail_id($id);
-        $title = get_post_meta( $featured_ID, '_wp_attachment_image_alt', true );
-        /* grab the url for the full size featured image */
-        $featured_img_url = get_the_post_thumbnail_url($id,'full'); 
- 
-        /* link thumbnail to full size image for use with lightbox*/
-        $replace = '<a data-lity data-title="'.$title.'" href="'.esc_url($featured_img_url).'" rel="lightbox"><span class="et_pb_image_wrap "><img src="'.$featured_img_url.'"/><br></span></a>';
-
-   
+        foreach ( $location_fields as $field ) {
+            if ( isset( $data['location'][ $field ] ) ) {
+                $location[ $field ] = sanitize_text_field( $data['location'][ $field ] );
+            }
+        }
         
+        update_field( 'location', $location, $post_id );
     }
-    return $replace;
-}
 
-
-
-// Date
-add_filter('em_event_output_placeholder','em_date',1,3);
-function em_date($replace, $EM_Event, $result){
-    if( $result == '#_EMDATE' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		$source = get_post_meta( $id, '_event_start_date', true);
-		$date = new DateTime($source);
-		$endtime = get_post_meta($id, '_event_end_time', true);
-		$starttime = get_post_meta($id, '_event_start_time', true);
-        $d = DateTime::createFromFormat( 'd-m-Y H:i:s', $date->format('d-m-Y H:i:s') );		
-		date_default_timezone_set(get_post_meta($id, '_event_timezone', true));
-		
-		$replace .= '<div class="em-item-meta-line em-item-presenter em-event-presenter"><span class="em-icon-clock em-icon"></span>';
-		$replace .= date('h:i A', strtotime($starttime)); 
-		$replace .= $endtime ? ' - '. date('h:i A', strtotime($endtime)). ' ' : ''; 
-		$replace .= date('I', $d->getTimestamp() ) ? date('T', $d->getTimestamp()) : date('T', $d->getTimestamp());
-		$replace .= '</div>';
-		
+    // Handle learning objectives array
+    if ( ! empty( $data['objectives'] ) && is_array( $data['objectives'] ) ) {
+        foreach ( $data['objectives'] as $objective ) {
+            if ( ! empty( $objective ) ) {
+                add_row( 'learning_objectives', array( 'objectives' => sanitize_text_field( $objective ) ), $post_id );
+            }
+        }
     }
-    return $replace;
-}
 
-// Ticket
-add_filter('em_event_output_placeholder','em_ticketprice',1,3);
-function em_ticketprice($replace, $EM_Event, $result){
-    if( $result == '#_EMTICKETPRICE' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		
-        if(get_field('ticket_price', $id )):
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-presenter"><span class="em-icon-ticket em-icon"></span>';
-			$replace .= '<div>'.get_field('ticket_price', $id ).'</div></div>';
-		else: 
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-presenter"><span class="em-icon-ticket em-icon"></span><div>Free</div></div>';      
-        endif;		
-		
-    }
-    return $replace;
-}
-
-
-// Location
-add_filter('em_event_output_placeholder','em_location',1,3);
-function em_location($replace, $EM_Event, $result){
-    if( $result == '#_EMLOCATION' ){
-        $replace = "";
-        $id = $EM_Event->post_id;
-		
-        if(get_field('location', $id )):
-
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>'.get_field('location', $id ).'</div></div>';
-
-		else: 
-
-			$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>Online</div></div>';   
-	
-        endif;
-		
-    }
-    return $replace;
-}
-
-/**
- * Event Template Filters End
- */
+}, 10, 3 );

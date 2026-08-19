@@ -5,6 +5,43 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-08-19
+
+### Changed
+
+- **File**: `public/partials/event-client-acf-fields.php`
+  - Location field upgraded from simple text input to structured group field with 7 sub-fields:
+    - `location_name` (text) - Name/label of the venue
+    - `country` (text, default: "United States")
+    - `address_1` (text) - Primary street address
+    - `address_2` (text) - Secondary address (suite, unit, etc.)
+    - `city` (text)
+    - `state` (text)
+    - `zip_code` (text)
+
+- **File**: `public/partials/event-client-calendar-template.php`
+  - Updated `em_location()` filter to handle new location group field structure
+  - Display format: location_name with multi-line formatted address
+  - Fallback to "Virtual" if no location data present
+
+- **File**: `public/partials/event-client-helper-functions.php`
+  - Removed duplicate template filter functions (em_summary, em_learnobj, em_contactinfo, em_url, em_presenter, em_lbimage, em_date, em_ticketprice, em_location) - now consolidated in calendar-template.php
+  - Added `em_api_event_save` hook for ACF field persistence from Events Manager API payloads
+  - Handles location group field with automatic sanitization of all 7 sub-fields
+  - Handles learning objectives array persistence
+
+- **File**: `public/class-event-client-public.php`
+  - Reorganized include statements for clarity
+  - Enabled `event-client-helper-functions.php` include
+  - Commented out `event-client-create-events.php` (custom endpoint being retired in favor of Events Manager native API)
+  - Added migration note in code
+
+### Migration Notes
+
+- Transitioning from custom event creation endpoint to Events Manager native REST API (`POST /wp-json/events-manager/v1/events`)
+- Custom `event-client-create-events.php` endpoint will be deprecated once migration is complete
+- ACF fields are now persisted via the `em_api_event_save` hook, which fires after Events Manager creates the event
+
 ## [1.0.3] - 2026-07-23
 
 ### Changed
