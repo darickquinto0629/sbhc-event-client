@@ -351,25 +351,6 @@ event-client/
 - **Custom Event Endpoint** (`event-client-create-events.php`) — Being phased out
   - Old endpoint: `POST /wp-json/sbhc/v2/postevent`
   - Use Events Manager native API instead: `POST /wp-json/events-manager/v1/events`
-    ├── includes/ # Core plugin classes
-    │ ├── class-event-client.php # Main plugin class
-    │ ├── class-event-client-loader.php # Hook orchestrator
-    │ ├── class-event-client-i18n.php # Internationalization
-    │ ├── class-event-client-activator.php # Activation hook
-    │ └── class-event-client-deactivator.php
-    ├── public/ # Public-facing functionality
-    │ ├── class-event-client-public.php
-    │ ├── css/
-    │ ├── js/
-    │ └── partials/ # REST route handlers
-    │ ├── event-client-create-events.php
-    │ ├── event-client-get-events.php
-    │ └── ...other partials
-    ├── languages/ # Translation files
-    ├── event-client.php # Plugin entry point
-    └── uninstall.php
-
-```
 
 ## License
 
@@ -382,4 +363,3 @@ For issues or questions, please contact the development team at darick.q@jollity
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
-```
