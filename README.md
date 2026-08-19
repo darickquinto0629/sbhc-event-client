@@ -352,6 +352,27 @@ event-client/
   - Old endpoint: `POST /wp-json/sbhc/v2/postevent`
   - Use Events Manager native API instead: `POST /wp-json/events-manager/v1/events`
 
+```
+event-client/
+├── includes/
+│   ├── class-event-client.php
+│   ├── class-event-client-loader.php
+│   ├── class-event-client-i18n.php
+│   ├── class-event-client-activator.php
+│   └── class-event-client-deactivator.php
+├── public/
+│   ├── class-event-client-public.php
+│   ├── css/
+│   ├── js/
+│   └── partials/
+│       ├── event-client-create-events.php
+│       ├── event-client-get-events.php
+│       └── ...other partials
+├── languages/
+├── event-client.php
+└── uninstall.php
+```
+
 ## License
 
 GPLv2 or later. See LICENSE.txt for details.
