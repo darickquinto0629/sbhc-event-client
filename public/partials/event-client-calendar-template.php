@@ -15,6 +15,23 @@ function em_summary($replace, $EM_Event, $result){
     }
     return $replace;
 }
+// Summary Condition Check
+add_filter('em_event_output_condition', 'my_em_summary_condition', 10, 4);
+
+function my_em_summary_condition($replacement, $condition, $match, $EM_Event) {
+
+    if ($condition === 'has_summary') {
+
+        if (is_object($EM_Event) && trim($EM_Event->output('#_EMSUMMARY')) !== '') {
+            $replacement = preg_replace('/\{\/?has_summary\}/', '', $match);
+        } else {
+            $replacement = '';
+        }
+    }
+
+    return $replacement;
+}
+
 
 
 // Learning Objectives
@@ -46,6 +63,22 @@ function em_learnobj($replace, $EM_Event, $result){
 		
     }
     return $replace;
+}
+// Event Object Condition Check
+add_filter('em_event_output_condition', 'my_emobj_condition', 10, 4);
+
+function my_emobj_condition($replacement, $condition, $match, $EM_Event) {
+
+    if ($condition === 'has_emobj') {
+
+        if (is_object($EM_Event) && trim($EM_Event->output('#_EMOBJ')) !== '') {
+            $replacement = preg_replace('/\{\/?has_emobj\}/', '', $match);
+        } else {
+            $replacement = '';
+        }
+    }
+
+    return $replacement;
 }
 
 

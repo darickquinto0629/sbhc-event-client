@@ -5,6 +5,38 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-08-27
+
+### Added
+
+- **File**: `public/partials/event-client-calendar-template.php`
+  - `my_em_summary_condition()` function - Handles `{has_summary}...{/has_summary}` conditional tags
+    - Prevents wrapper divs from rendering when Summary field is empty
+    - Checks if output of `#_EMSUMMARY` placeholder contains content
+  - `my_emobj_condition()` function - Handles `{has_emobj}...{/has_emobj}` conditional tags
+    - Prevents wrapper divs from rendering when Learning Objectives are empty
+    - Checks if output of `#_EMOBJ` placeholder contains content
+
+### How to Use in Templates
+
+Use conditional tags in Events Manager calendar templates to conditionally display sections:
+
+```
+{has_summary}
+  <!-- Summary section will only show if content exists -->
+{/has_summary}
+
+{has_emobj}
+  <!-- Learning Objectives section will only show if content exists -->
+{/has_emobj}
+```
+
+### Non-Breaking
+
+- Existing functionality unchanged
+- New condition functions work alongside existing placeholder filters
+- No impact on events without these fields populated
+
 ## [1.0.4] - 2026-08-19
 
 ### Changed
