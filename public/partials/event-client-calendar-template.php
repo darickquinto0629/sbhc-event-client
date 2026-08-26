@@ -166,15 +166,52 @@ function em_date($replace, $EM_Event, $result){
 		$date = new DateTime($source);
 		$endtime = get_post_meta($id, '_event_end_time', true);
 		$starttime = get_post_meta($id, '_event_start_time', true);
-        $d = DateTime::createFromFormat( 'd-m-Y H:i:s', $date->format('d-m-Y H:i:s') );		
-		date_default_timezone_set(get_post_meta($id, '_event_timezone', true));
-		
+        $d = DateTime::createFromFormat( 'd-m-Y H:i:s', $date->format('d-m-Y H:i:s') );
+		$timezone = get_post_meta($id, '_event_timezone', true);
+		date_default_timezone_set($timezone);
+
+		$timezone_labels = array(
+			'America/New_York'             => 'ET',
+			'America/Detroit'              => 'ET',
+			'America/Kentucky/Louisville'  => 'ET',
+			'America/Kentucky/Monticello'  => 'ET',
+			'America/Indiana/Indianapolis' => 'ET',
+			'America/Indiana/Marengo'      => 'ET',
+			'America/Indiana/Vevay'        => 'ET',
+			'America/Chicago'              => 'CT',
+			'America/Indiana/Knox'         => 'CT',
+			'America/Indiana/Tell_City'    => 'CT',
+			'America/Menominee'            => 'CT',
+			'America/North_Dakota/Center'  => 'CT',
+			'America/North_Dakota/New_Salem' => 'CT',
+			'America/North_Dakota/Beulah'  => 'CT',
+			'America/Denver'               => 'MT',
+			'America/Boise'                => 'MT',
+			'America/Phoenix'              => 'MT',
+			'America/Los_Angeles'          => 'PT',
+			'America/Anchorage'            => 'AKT',
+			'America/Juneau'               => 'AKT',
+			'America/Sitka'                => 'AKT',
+			'America/Metlakatla'           => 'AKT',
+			'America/Yakutat'              => 'AKT',
+			'America/Nome'                 => 'AKT',
+			'America/Adak'                 => 'HAT',
+			'Pacific/Honolulu'             => 'HT',
+			'Pacific/Guam'                 => 'ChST',
+			'Pacific/Saipan'               => 'ChST',
+			'Pacific/Pago_Pago'            => 'SST',
+			'Pacific/Midway'               => 'SST',
+			'Pacific/Wake'                 => 'WAKT',
+		);
+
+		$timezone_label = isset($timezone_labels[$timezone]) ? $timezone_labels[$timezone] : date('T', $d->getTimestamp());
+
 		$replace .= '<div class="em-item-meta-line em-item-presenter em-event-presenter"><span class="em-icon-clock em-icon"></span>';
-		$replace .= date('h:i A', strtotime($starttime)); 
-		$replace .= $endtime ? ' - '. date('h:i A', strtotime($endtime)). ' ' : ''; 
-		$replace .= date('I', $d->getTimestamp() ) ? date('T', $d->getTimestamp()) : date('T', $d->getTimestamp());
+		$replace .= date('h:i A', strtotime($starttime));
+		$replace .= $endtime ? ' - '. date('h:i A', strtotime($endtime)). ' ' : '';
+		$replace .= $timezone_label;
 		$replace .= '</div>';
-		
+
     }
     return $replace;
 }

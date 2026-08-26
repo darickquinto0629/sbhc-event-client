@@ -5,6 +5,20 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-08-27
+
+### Changed
+
+- **File**: `public/partials/event-client-calendar-template.php`
+  - `em_date()` filter - Expanded `$timezone_labels` map to cover all US timezones (Eastern, Central, Mountain, Pacific, Alaska, Hawaii-Aleutian, Guam/Saipan, Samoa, Wake Island) plus their regional sub-zones (e.g. Indiana, Kentucky, North Dakota counties)
+  - Displayed abbreviations no longer distinguish standard vs. daylight time (e.g. `ET` instead of `EST`/`EDT`, `CT` instead of `CST`/`CDT`, `MT` instead of `MST`/`MDT`, `PT` instead of `PST`/`PDT`)
+  - Zones without a mapped entry still fall back to PHP's `date('T', ...)` abbreviation
+
+### Non-Breaking
+
+- Existing functionality unchanged for unmapped timezones (unchanged fallback behavior)
+- No changes to date/time calculation logic, only the displayed timezone label
+
 ## [1.0.5] - 2026-08-27
 
 ### Added
