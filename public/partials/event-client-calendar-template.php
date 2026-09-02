@@ -259,7 +259,7 @@ function em_location($replace, $EM_Event, $result){
 					$address_2 = get_sub_field('address_2',  $id);
 					$city = get_sub_field('city',  $id);
 					$state = get_sub_field('state',  $id);
-					$zip = get_sub_field('zip',  $id);		
+					$zip = get_sub_field('zip_code',  $id);		
 		
 					$replace .= '<div class="em-item-meta-line em-item-ticket em-event-location"><span class="em-icon-location em-icon"></span><div>';
 
