@@ -144,12 +144,13 @@ function em_lbimage($replace, $EM_Event, $result){
         $replace = "";
         $id = $EM_Event->post_id;
         $featured_ID = get_post_thumbnail_id($id);
+        $img_url = get_field('registration_link', $id);
         $title = get_post_meta( $featured_ID, '_wp_attachment_image_alt', true );
         /* grab the url for the full size featured image */
         $featured_img_url = get_the_post_thumbnail_url($id,'full'); 
- 
-        /* link thumbnail to full size image for use with lightbox*/
-        $replace = '<a data-lity data-title="'.$title.'" href="'.esc_url($featured_img_url).'" rel="lightbox"><span class="et_pb_image_wrap "><img src="'.$featured_img_url.'"/><br></span></a>';
+        
+        // Updated from lity lightbox url to become url of the registration link.
+        $replace = '<a href="'.esc_url($img_url).'" target="_blank"><span class="et_pb_image_wrap "><img src="'.$featured_img_url.'"/><br></span></a>';        
     }
     return $replace;
 }
