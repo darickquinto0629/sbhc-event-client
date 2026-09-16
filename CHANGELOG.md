@@ -5,6 +5,15 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2026-09-16
+
+### Changed
+
+- **File**: `public/partials/event-client-acf-fields.php`
+  - `presenter` field changed from a text field to a repeater field (`field_65ab66a69f710`) with a `presenter_name_and_title` sub-field, allowing multiple presenters per event
+- **File**: `public/partials/event-client-calendar-template.php`
+  - `em_presenter()` filter - Updated to loop through the `presenter` repeater rows and output each presenter's name/title on its own line
+
 ## [1.0.8] - 2026-09-11
 
 ### Changed
