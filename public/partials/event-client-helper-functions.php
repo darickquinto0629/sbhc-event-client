@@ -26,7 +26,6 @@ add_action( 'em_api_event_save', function( $EM_Event, $data, $event_id ) {
 
     // ACF field mappings
     $acf_field_mappings = array(
-        'presenter'           => 'presenter',
         'ticket_price'        => 'ticket_price',
         'event_location_type' => 'event_location_type',
         'summary'             => 'summary',
@@ -68,13 +67,32 @@ add_action( 'em_api_event_save', function( $EM_Event, $data, $event_id ) {
         update_field( 'location', $location, $post_id );
     }
 
-    // Handle learning objectives array
-    if ( ! empty( $data['objectives'] ) && is_array( $data['objectives'] ) ) {
-        foreach ( $data['objectives'] as $objective ) {
-            if ( ! empty( $objective ) ) {
-                add_row( 'learning_objectives', array( 'objectives' => sanitize_text_field( $objective ) ), $post_id );
+    // Handle presenter repeater field (array of names; wrap a plain string for backward compatibility with older payloads)
+    if ( ! empty( $data['presenter'] ) ) {
+        $presenters = is_array( $data['presenter'] ) ? $data['presenter'] : array( $data['presenter'] );
+
+        $presenter_rows = array();
+        foreach ( $presenters as $presenter_name ) {
+            if ( ! empty( $presenter_name ) ) {
+                $presenter_rows[] = array( 'presenter_name_and_title' => sanitize_text_field( $presenter_name ) );
             }
         }
+
+        // update_field() replaces all existing rows, so this never appends duplicates.
+        update_field( 'presenter', $presenter_rows, $post_id );
+    }
+
+    // Handle learning objectives array
+    if ( ! empty( $data['objectives'] ) && is_array( $data['objectives'] ) ) {
+        $objective_rows = array();
+        foreach ( $data['objectives'] as $objective ) {
+            if ( ! empty( $objective ) ) {
+                $objective_rows[] = array( 'objectives' => sanitize_text_field( $objective ) );
+            }
+        }
+
+        // update_field() replaces all existing rows, so this never appends duplicates.
+        update_field( 'learning_objectives', $objective_rows, $post_id );
     }
 
 }, 10, 3 );

@@ -5,6 +5,15 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.10] - 2026-09-16
+
+### Fixed
+
+- **File**: `public/partials/event-client-helper-functions.php`
+  - `em_api_event_save` hook - `presenter` save logic updated to match the `presenter` ACF repeater field (added in 1.0.9); now builds a repeater rows array and saves via `update_field()` instead of writing a single text value
+  - `presenter` now accepts an array of presenter names (hub site's new payload shape) and still accepts a single string for backward compatibility
+  - `objectives` save logic changed from `add_row()` (which appended rows and caused duplicates on repeat saves) to `update_field()` with a full rows array, so existing rows are cleared/overwritten instead of accumulating duplicates
+
 ## [1.0.9] - 2026-09-16
 
 ### Changed
