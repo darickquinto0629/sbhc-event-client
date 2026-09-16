@@ -41,3 +41,6 @@ build/
 # Testing
 coverage/
 .phpunit.result.cache
+
+# Code Review
+CODE-REVIEW-presenter-migration.md

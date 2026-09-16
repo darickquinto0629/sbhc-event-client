@@ -64,6 +64,8 @@ function em_learnobj($replace, $EM_Event, $result){
     }
     return $replace;
 }
+
+
 // Event Object Condition Check
 add_filter('em_event_output_condition', 'my_emobj_condition', 10, 4);
 
@@ -126,13 +128,28 @@ function em_presenter($replace, $EM_Event, $result){
     if( $result == '#_EMPRESENTER' ){
         $replace = "";
         $id = $EM_Event->post_id;
-		if(get_field('presenter', $id)):
-            
-			$replace .= '<div class="em-item-meta-line em-item-presenter em-event-presenter"><span class="em-icon-presenter em-icon"></span>';
-			$replace .=	'<div>'.get_field('presenter', $id ).'</div>';
-			$replace .= '</div>';
+		
+        // Check rows exists.
+        if( have_rows('presenter', $id ) ):
+            $replace .= '<div class="em-item-meta-line em-item-presenter em-event-presenter">';
+            $replace .= '<span class="em-icon-presenter em-icon"></span>';
+            $replace .= '<div>';
 
+            // Loop through rows.
+            while( have_rows('presenter', $id ) ) : the_row();
+
+                // Load sub field value.
+                $presenter = get_sub_field('presenter_name_and_title');
+
+                $replace .= $presenter != '' ? esc_html($presenter) . '<br>' : '';
+
+            // End loop.
+            endwhile;
+
+            $replace .= '</div>';
+            $replace .= '</div>';
         endif;
+		
     }
     return $replace;
 }
