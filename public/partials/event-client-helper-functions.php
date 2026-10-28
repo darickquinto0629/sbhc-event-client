@@ -53,6 +53,11 @@ add_action( 'em_api_event_save', function( $EM_Event, $data, $event_id ) {
         update_field( $acf_field_name, $value, $post_id );
     }
 
+    // Checked separately from the loop above so that false can un-feature an event.
+    if ( isset( $data['featured_event'] ) ) {
+        update_field( 'featured_event', rest_sanitize_boolean( $data['featured_event'] ) ? 1 : 0, $post_id );
+    }
+
     // Handle location group field
     if ( ! empty( $data['location'] ) && is_array( $data['location'] ) ) {
         $location = array();
@@ -96,3 +101,22 @@ add_action( 'em_api_event_save', function( $EM_Event, $data, $event_id ) {
     }
 
 }, 10, 3 );
+
+/**
+ * Sort featured events first in Events Manager listings, then by the existing order.
+ */
+add_filter( 'em_events_build_sql_orderby', function( $orderby ) {
+    global $wpdb;
+
+    // In multisite global mode events span blogs, so a single postmeta table can't be used.
+    if ( defined( 'EM_MS_GLOBAL' ) && EM_MS_GLOBAL ) {
+        return $orderby;
+    }
+
+    $featured_first = "EXISTS ( SELECT 1 FROM {$wpdb->postmeta} WHERE {$wpdb->postmeta}.post_id = " . EM_EVENTS_TABLE . ".post_id AND {$wpdb->postmeta}.meta_key = 'featured_event' AND {$wpdb->postmeta}.meta_value = '1' ) DESC";
+
+    $orderby = is_array( $orderby ) ? $orderby : array();
+    array_unshift( $orderby, $featured_first );
+
+    return $orderby;
+} );

@@ -74,6 +74,7 @@ class Event_Client {
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_public_hooks();
+		$this->define_cleanup_hooks();
 
 	}
 
@@ -112,6 +113,11 @@ class Event_Client {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-event-client-public.php';
 
+		/**
+		 * The class responsible for deleting events that ended more than 3 months ago.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-event-client-cleanup.php';
+
 		$this->loader = new Event_Client_Loader();
 
 	}
@@ -146,6 +152,20 @@ class Event_Client {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
+	}
+
+	/**
+	 * Register the scheduled deletion of old events.
+	 *
+	 * @access   private
+	 */
+	private function define_cleanup_hooks() {
+
+		$plugin_cleanup = new Event_Client_Cleanup();
+
+		$this->loader->add_action( 'init', $plugin_cleanup, 'schedule' );
+		$this->loader->add_action( Event_Client_Cleanup::CRON_HOOK, $plugin_cleanup, 'delete_old_events' );
 
 	}
 

@@ -403,6 +403,27 @@ add_action( 'acf/include_fields', function() {
 			'default_value' => '',
 			'placeholder' => '',
 		),
+		array(
+			'key' => 'field_6b1f0a0c1a001',
+			'label' => 'Featured Event',
+			'name' => 'featured_event',
+			'aria-label' => '',
+			'type' => 'true_false',
+			'instructions' => '',
+			'required' => 0,
+			'conditional_logic' => 0,
+			'wrapper' => array(
+				'width' => '',
+				'class' => '',
+				'id' => '',
+			),
+			'message' => 'Set as featured event',
+			'default_value' => 0,
+			'allow_in_bindings' => 0,
+			'ui' => 0,
+			'ui_on_text' => '',
+			'ui_off_text' => '',
+		),
 	),
 	'location' => array(
 		array(

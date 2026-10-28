@@ -30,7 +30,8 @@ class Event_Client_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		require_once plugin_dir_path( __FILE__ ) . 'class-event-client-cleanup.php';
+		Event_Client_Cleanup::unschedule();
 	}
 
 }

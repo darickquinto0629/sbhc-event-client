@@ -5,6 +5,30 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.11] - 2026-10-28
+
+### Added
+
+- **File**: `public/partials/event-client-acf-fields.php`
+  - New ACF True/False field `featured_event` (`field_6b1f0a0c1a001`) with the message "Set as featured event", shown on the event edit screen
+- **File**: `public/partials/event-client-helper-functions.php`
+  - `em_api_event_save` hook - Accepts a `featured_event` value (`true`/`false`) from the Events Manager API payload so the controller can feature or un-feature an event remotely; handled outside the main field loop so that `false` is saved instead of skipped
+  - `em_events_build_sql_orderby` filter - Sorts featured events first in all Events Manager listings, then by the existing order; sorting is done in the SQL query so it works across pagination. Past events still drop off as usual. Skipped in multisite global mode (`EM_MS_GLOBAL`)
+- **File**: `includes/class-event-client-cleanup.php` (new)
+  - `Event_Client_Cleanup` class - Permanently deletes Events Manager events whose end date is more than 3 months ago, using `EM_Event::delete()` so the post, ACF fields, `em_events` row, bookings, tickets and time ranges are all removed
+  - Deletes each event's featured image (attachment and files) unless another post still uses it as its featured image
+  - Skips recurring/repeating parent events; their past occurrences are deleted individually
+  - Runs as the first administrator during the job, because Events Manager refuses deletes without a capable user and WP-Cron has none; the original user is restored afterwards
+  - Processes 50 events per run; when a full batch is deleted, a follow-up run is scheduled 5 minutes later until the backlog is cleared
+  - Scheduled once a month on the last day of the month at 12:00 AM `America/New_York`, and only while the plugin is active
+- **File**: `includes/class-event-client.php`
+  - Loads `class-event-client-cleanup.php` and registers the schedule (`init`) and the `event_client_delete_old_events` cron hook via `define_cleanup_hooks()`
+
+### Changed
+
+- **File**: `includes/class-event-client-deactivator.php`
+  - `deactivate()` - Now clears the `event_client_delete_old_events` scheduled event when the plugin is deactivated
+
 ## [1.0.10] - 2026-09-16
 
 ### Fixed
