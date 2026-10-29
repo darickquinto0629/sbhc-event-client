@@ -23,6 +23,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       event-client
  * Domain Path:       /languages
+ * Update URI:        https://github.com/darickquinto0629/sbhc-event-client
  */
 
 // If this file is called directly, abort.
@@ -46,7 +47,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/plugin-update-checker/plugi
 $event_client_update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
 	'https://github.com/darickquinto0629/sbhc-event-client/',
 	__FILE__,
-	'event-client'
+	'sbhc-event-client'
 );
 $event_client_update_checker->setBranch( 'main' );
 

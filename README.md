@@ -23,7 +23,7 @@ A WordPress plugin that provides REST API endpoints for remote event creation an
 
 ## Installation
 
-1. Clone or download this repository to `/wp-content/plugins/event-client/`
+1. Clone or download this repository to `/wp-content/plugins/sbhc-event-client/` (the folder name must be `sbhc-event-client` on every site)
 2. Activate the plugin in the WordPress admin
 3. Ensure **Events Manager** plugin is installed and activated
 4. (Optional) Configure ACF fields for event metadata
@@ -32,13 +32,15 @@ A WordPress plugin that provides REST API endpoints for remote event creation an
 
 From version 1.0.12 the plugin checks this repository for new versions using the bundled [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) library (`includes/plugin-update-checker/`). Updates appear on the WordPress **Plugins** and **Dashboard → Updates** screens like any other plugin, and can be applied with one click or by WordPress auto-updates ("Enable auto-updates" link on the Plugins screen).
 
-Sites running 1.0.11 or older must be updated manually once to 1.0.12; after that, updates arrive automatically.
+Sites running 1.0.11 or older must be updated manually once to 1.0.12; after that, updates arrive automatically. For that manual update, upload the `sbhc-event-client.zip` release asset (not GitHub's "Source code (zip)", whose folder name does not match) via **Plugins → Add New → Upload Plugin** and choose **Replace current with uploaded**.
 
 ### Publishing a new version
 
 1. Bump the version in **both** places in `event-client.php`: the `Version:` header and `EVENT_CLIENT_VERSION`
 2. Update `CHANGELOG.md`, commit, and push to `main`
-3. Create a GitHub release whose tag matches the version (e.g. `v1.0.13` or `1.0.13`)
+3. Create a GitHub release whose tag matches the version (e.g. `v1.0.13` or `1.0.13`). Do not mark it as a pre-release or draft; those are ignored
+
+Until the first release exists, sites fall back to the version on the `main` branch, so avoid pushing a version bump to `main` before you intend to release it.
 
 WordPress checks for updates about every 12 hours. To check immediately on a site, click **Check for updates** under the plugin on the Plugins screen.
 
@@ -316,7 +318,7 @@ The `em_api_event_save` hook automatically maps and saves:
 ### File Structure
 
 ```
-event-client/
+sbhc-event-client/
 ├── event-client.php                    # Plugin bootstrap
 ├── CHANGELOG.md                        # Version history
 ├── README.md                           # This file

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File**: `event-client.php`
   - Checks GitHub releases of `darickquinto0629/sbhc-event-client` for new versions, so updates show on the WordPress Plugins screen and can be installed with one click or WordPress auto-updates
   - Optional `EVENT_CLIENT_GITHUB_TOKEN` constant (set in `wp-config.php`) for authenticating against a private repository
+  - `Update URI` header so WordPress.org can never offer an unrelated plugin as an update for this one
 
 ### Changed
 
