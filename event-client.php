@@ -16,7 +16,7 @@
  * Plugin Name:       Event Client
  * Plugin URI:        https://jollity.io
  * Description:       This plugin is a client side of the events controller. it opens endpoints so the Event controller can communicate and send events remotely.
- * Version:           1.0.11
+ * Version:           1.0.12
  * Author:            Summit BHC
  * Author URI:        https://summitbhc.com/
  * License:           GPL-2.0+
@@ -35,7 +35,24 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'EVENT_CLIENT_VERSION', '1.0.11' );
+define( 'EVENT_CLIENT_VERSION', '1.0.12' );
+
+/**
+ * Checks GitHub releases for plugin updates so they appear in the WordPress dashboard.
+ * Optionally define EVENT_CLIENT_GITHUB_TOKEN in wp-config.php if the repository is private.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/plugin-update-checker/plugin-update-checker.php';
+
+$event_client_update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+	'https://github.com/darickquinto0629/sbhc-event-client/',
+	__FILE__,
+	'event-client'
+);
+$event_client_update_checker->setBranch( 'main' );
+
+if ( defined( 'EVENT_CLIENT_GITHUB_TOKEN' ) && EVENT_CLIENT_GITHUB_TOKEN ) {
+	$event_client_update_checker->setAuthentication( EVENT_CLIENT_GITHUB_TOKEN );
+}
 
 /**
  * The code that runs during plugin activation.

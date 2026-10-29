@@ -10,6 +10,7 @@ wp-content/plugins/*/.DS_Store
 # Dependencies
 node_modules/
 vendor/
+!includes/plugin-update-checker/vendor/
 composer.lock
 
 # IDE & Editor

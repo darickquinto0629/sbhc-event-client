@@ -5,6 +5,21 @@ All notable changes to the Event Client plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.12] - 2026-10-29
+
+### Added
+
+- **Folder**: `includes/plugin-update-checker/` (new)
+  - Bundled [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) v5.7 library
+- **File**: `event-client.php`
+  - Checks GitHub releases of `darickquinto0629/sbhc-event-client` for new versions, so updates show on the WordPress Plugins screen and can be installed with one click or WordPress auto-updates
+  - Optional `EVENT_CLIENT_GITHUB_TOKEN` constant (set in `wp-config.php`) for authenticating against a private repository
+
+### Changed
+
+- **File**: `.gitignore`
+  - No longer ignores `includes/plugin-update-checker/vendor/`, which the bundled library needs
+
 ## [1.0.11] - 2026-10-28
 
 ### Added

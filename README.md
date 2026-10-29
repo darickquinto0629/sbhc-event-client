@@ -28,6 +28,28 @@ A WordPress plugin that provides REST API endpoints for remote event creation an
 3. Ensure **Events Manager** plugin is installed and activated
 4. (Optional) Configure ACF fields for event metadata
 
+## Automatic Updates from GitHub
+
+From version 1.0.12 the plugin checks this repository for new versions using the bundled [Plugin Update Checker](https://github.com/YahnisElsts/plugin-update-checker) library (`includes/plugin-update-checker/`). Updates appear on the WordPress **Plugins** and **Dashboard → Updates** screens like any other plugin, and can be applied with one click or by WordPress auto-updates ("Enable auto-updates" link on the Plugins screen).
+
+Sites running 1.0.11 or older must be updated manually once to 1.0.12; after that, updates arrive automatically.
+
+### Publishing a new version
+
+1. Bump the version in **both** places in `event-client.php`: the `Version:` header and `EVENT_CLIENT_VERSION`
+2. Update `CHANGELOG.md`, commit, and push to `main`
+3. Create a GitHub release whose tag matches the version (e.g. `v1.0.13` or `1.0.13`)
+
+WordPress checks for updates about every 12 hours. To check immediately on a site, click **Check for updates** under the plugin on the Plugins screen.
+
+### Private repository (optional)
+
+If the repository is private, add a read-only GitHub token to each site's `wp-config.php`:
+
+```php
+define( 'EVENT_CLIENT_GITHUB_TOKEN', 'github_pat_xxx' );
+```
+
 ## Migration to Events Manager API
 
 **Version 1.0.4+:** This plugin now integrates with the **Events Manager** native REST API instead of a custom endpoint.
@@ -304,7 +326,8 @@ event-client/
 │   ├── class-event-client-loader.php   # Hook loader
 │   ├── class-event-client-activator.php
 │   ├── class-event-client-deactivator.php
-│   └── class-event-client-i18n.php     # i18n setup
+│   ├── class-event-client-i18n.php     # i18n setup
+│   └── plugin-update-checker/          # Bundled GitHub update checker library
 ├── public/
 │   ├── class-event-client-public.php   # Public-facing functionality
 │   ├── css/
